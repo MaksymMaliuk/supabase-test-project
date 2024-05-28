@@ -1,4 +1,6 @@
+
 import { createBrowserClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export const createClient = () =>
   createBrowserClient(
