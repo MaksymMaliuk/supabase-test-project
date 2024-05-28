@@ -60,8 +60,7 @@ export default function AddNews() {
   }
 
   return (
-    <div>
-
+    <div className="add-news-page">
       <form onSubmit={handleSubmit} className="add-news-form flex flex-col gap-4 max-w-md">
         <h1 className="text-2xl font-bold mb-4">
           Add News
@@ -91,20 +90,30 @@ export default function AddNews() {
         </button>
       </form>
 
-      {loading
-        ? <Container>
-            <p>Loading...</p>
-          </Container>
-        : <Container className="mt-24">
-            <h2>
-              Article title: {newsData?.title}
-            </h2>
+        {loading
+          ? <Container>
+              <p>Loading...</p>
+            </Container>
+          : <Container>
+              <div className="text-xl mb-2">
+                Article title:
+              </div>
 
-            <div className="mt-4">
-              Article description: {newsData?.description}
-            </div>
-          </Container>
-      }
+              <h1 className="text-2xl font-bold mb-4">
+                {newsData?.title}
+              </h1>
+
+              <div className="mt-4">
+                <div className="text-xl mb-6">
+                  Article description:
+                </div>
+
+                <p style={{ overflow: 'auto', maxHeight: '500px' }}>
+                  {newsData?.description}
+                </p>
+              </div>
+            </Container>
+        }
     </div>
   )
 }
