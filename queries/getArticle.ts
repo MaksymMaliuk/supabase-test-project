@@ -1,12 +1,12 @@
 'use server'
-import { supabase } from "@/utils/supabase/server";
+import fetchClient from "@/lib/fetchClient";
 
 export const getArticle = async (id: string) => {
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
-    .eq('id', id)
-    .single()
+  try {
+    const response = await fetchClient(`articles/${id}`, {}, {}, "GET")
 
-  return { data, error }
+    return response
+  } catch (error) {
+    throw error
+  }
 }

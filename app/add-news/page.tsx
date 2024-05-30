@@ -14,31 +14,25 @@ interface NewsData {
 }
 
 export default function AddNews() {
-  const [newsData, setNewsData] = useState<NewsData | undefined>(undefined)
+  const [newsData, setNewsData] = useState<NewsData | undefined | null>(undefined)
   const [url, setUrl] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const debouncedUrl = useDebounce(url, 500);
+  const [captchaUrl, setCaptchaUrl] = useState<any>()
 
+  const debouncedUrl = useDebounce(url, 500);
+  
   useEffect(() => {
     if (debouncedUrl) {
-      setLoading(true)
-
       parseNews(debouncedUrl)
-        .then(res => {
+        .then((data: any) => {
           setNewsData({
-            title: res?.title.trim(),
-            description: res?.description.trim(),
-            url: debouncedUrl
+            title: data?.title.trim(),
+            description: data?.description.trim(),
+            url
           })
-  
-          setError('')
         })
-        .catch(error => {
-          setError(error.message)
-        })
-        .finally(() => setLoading(false))
     }
 
   }, [debouncedUrl])
@@ -47,8 +41,14 @@ export default function AddNews() {
     e.preventDefault();
     setSubmitting(true);
 
-    if (newsData?.title && newsData?.description && newsData?.url) {
-      await createArticle(newsData.title, newsData.description, newsData.url);
+    const data = {
+      title: newsData?.title,
+      description: newsData?.description,
+      url
+    }
+
+    if (data) {
+      await createArticle(data);
     }
 
     setSubmitting(false);
@@ -90,7 +90,7 @@ export default function AddNews() {
         </button>
       </form>
 
-        {loading
+        {loading && !captchaUrl
           ? <Container>
               <p>Loading...</p>
             </Container>

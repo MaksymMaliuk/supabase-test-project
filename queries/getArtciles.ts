@@ -1,11 +1,15 @@
-'use server'
+'use client'
 
-import { supabase } from "@/utils/supabase/server"
+import { API_URL } from "@/lib/consts"
+import fetchClient from "@/lib/fetchClient"
+import axios from "axios"
 
 export const getArticles = async () => {
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
+  try {
+    const response = await fetchClient("articles", {}, {}, "GET")
     
-  return { data, error }
+    return response
+  } catch (error) {
+    throw error    
+  }
 }

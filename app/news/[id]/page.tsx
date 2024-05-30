@@ -14,9 +14,12 @@ export default function Article() {
     getArticle(id)
       .then(data => {
         setArticle({
-          title: data.data.title,
-          description: data.data.description
+          title: data.article.title,
+          description: data.article.description
         })
+      })
+      .catch(error => {
+        console.log(error)
       })
   }, [])
 

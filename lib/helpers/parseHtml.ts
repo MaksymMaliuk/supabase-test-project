@@ -3,12 +3,16 @@ import { parseCNN } from "./domainParsers/cnnParser"
 
 const getExternalNews = async (url: string) => {
   try {
-    const response = await axios.get(url)
+    const response = await axios.get(url, {
+      headers: {
+        Cookie: localStorage.getItem('datadomeCookie')
+      }
+    });
     const html = response.data
 
     return html
   } catch (error: any) {
-    throw new Error(`Error fetching external news: ${error.message}`);
+    throw error
   }
 }
 
@@ -19,13 +23,16 @@ const checkDomain = (url?: string) => {
 }
 
 export const parseNews = async (url: string) => {
-  const domain = checkDomain(url)
-  const html = await getExternalNews(url)
-
-  switch (domain) {
-    case 'cnn.com':
-      return parseCNN(html)
-    default:
-      return null
+  const domain = checkDomain(url);
+  try {
+    const html = await getExternalNews(url);
+    switch (domain) {
+      case 'cnn.com':
+        return parseCNN(html);
+      default:
+        return null;
+    }
+  } catch (error) {
+      throw error;
   }
-}
+};

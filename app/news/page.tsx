@@ -1,6 +1,7 @@
 'use client'
 
 import { Container } from "@/components/Container"
+import { BASE_URL } from "@/lib/consts"
 import { getArticles } from "@/queries/getArtciles"
 import { supabase } from "@/utils/supabase/server"
 import Link from "next/link"
@@ -9,12 +10,15 @@ import { useEffect, useState } from "react"
 type Articles = Omit<Article, 'description' | 'url'>[]
 
 export default function News() {
-  const [articles, setAricles] = useState<Articles>([])
+  const [articles, setArticles] = useState<Articles>([])
 
   useEffect(() => {
     getArticles()
-      .then((data) => {
-        setAricles(data.data as Articles)
+      .then(data => {
+        setArticles(data.articles);
+      })
+      .catch(error => {
+        console.log(error);
       })
   }, [])
 
