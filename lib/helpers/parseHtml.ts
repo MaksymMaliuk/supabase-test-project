@@ -1,14 +1,14 @@
-import axios from "axios"
 import { parseCNN } from "./domainParsers/cnnParser"
+import fetchClient from "../fetchClient";
+import { parseBBC } from "./domainParsers/bbcParser";
 
 const getExternalNews = async (url: string) => {
   try {
-    const response = await axios.get(url, {
-      headers: {
-        Cookie: localStorage.getItem('datadomeCookie')
-      }
-    });
-    const html = response.data
+    const response = await fetchClient('get-external-news', { url }, {
+      'Content-Type': 'application/json'
+    }, 'POST');
+
+    const html = response
 
     return html
   } catch (error: any) {
@@ -24,11 +24,14 @@ const checkDomain = (url?: string) => {
 
 export const parseNews = async (url: string) => {
   const domain = checkDomain(url);
+
   try {
     const html = await getExternalNews(url);
     switch (domain) {
       case 'cnn.com':
         return parseCNN(html);
+      case 'bbc.com':
+        return parseBBC(html);
       default:
         return null;
     }
